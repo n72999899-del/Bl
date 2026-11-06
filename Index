@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>BLUE CALVES FIT | Pro PWA</title>
+
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#04060c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Bluecalves">
+  <meta name="description" content="Aplicación pro de gimnasio de Bluecalves: Sobrecarga Progresiva, Macros y Arena de Debates.">
+
+  <!-- Manifest PWA Embebido como Data URI -->
+  <link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"Bluecalves Fit Pro","short_name":"Bluecalves","start_url":".","display":"standalone","background_color":"#04060c","theme_color":"#0284c7","orientation":"portrait","icons":[{"src":"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=192&auto=format&fit=crop&q=80","sizes":"192x192","type":"image/png"}]}'>
+
+  <!-- Google Fonts & Tailwind CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Configuración de Tema Tailwind -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              void: '#04060c',
+              darker: '#080d19',
+              card: '#0f172a',
+              cardLight: '#142038',
+              border: '#1e2e4f',
+              cyan: '#38bdf8',
+              blue: '#0284c7',
+              deep: '#092754',
+              electric: '#00d2ff'
+            }
+          },
+          fontFamily: {
+            title: ['Teko', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #04060c;
+      color: #f1f5f9;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .glow-brand {
+      box-shadow: 0 0 25px -4px rgba(2, 132, 199, 0.4);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 20px -2px rgba(56, 189, 248, 0.45);
+    }
+    .glow-red {
+      box-shadow: 0 0 25px -4px rgba(239, 68, 68, 0.35);
+    }
+    .glow-text {
+      text-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
+    }
+    .glass-nav {
+      background: rgba(8, 13, 25, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    /* Ocultar barra de scroll para vista nativa */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="flex flex-col h-screen overflow-hidden font-sans">
+
+  <!-- ================= HEADER SUPERIOR (TOP BAR) ================= -->
+  <header class="flex items-center justify-between px-5 pt-8 pb-3 bg-brand-darker/95 border-b border-brand-border/60 z-30">
+    <div class="flex items-center space-x-2.5">
+      <!-- Isotipo compacto de Bluecalves -->
+      <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-brand-deep via-brand-blue to-brand-cyan p-0.5 shadow-md shadow-brand-blue/30">
+        <div class="w-full h-full bg-brand-darker rounded-full flex items-center justify-center">
+          <svg viewBox="0 0 100 100" class="w-5 h-5">
+            <path d="M50 12 L70 46 L58 46 L58 66 L50 80 L42 66 L42 46 L30 46 Z" fill="#38bdf8" />
+            <path d="M50 25 L61 47 L50 70 L39 47 Z" fill="#092754" />
+            <circle cx="50" cy="50" r="45" stroke="#0284c7" stroke-width="5" fill="none" />
+          </svg>
+        </div>
+      </div>
+      <div>
+        <span class="font-title tracking-wider text-2xl text-white leading-none">BLUE CALVES</span>
+        <span class="font-title tracking-widest text-sm text-brand-cyan font-bold block leading-none">FIT</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="installPWA()" id="install-btn" class="hidden px-2.5 py-1 rounded-full text-[10px] font-bold bg-brand-blue text-white shadow-sm shadow-brand-blue/50 uppercase tracking-wider">
+        📲 Instalar
+      </button>
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-brand-blue/10 text-brand-cyan border border-brand-cyan/20">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse"></span>
+        <span class="text-[10px] tracking-widest uppercase">PRO</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= CONTENEDOR PRINCIPAL ================= -->
+  <main class="flex-1 overflow-y-auto pb-24 px-4 pt-4">
+
+    <!-- ========== TAB 1: INICIO (DASHBOARD & IDENTIDAD) ========== -->
+    <section id="tab-home" class="space-y-5">
+      
+      <!-- Logo Oficial Hero y Presentación -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-brand-card to-brand-darker border border-brand-border/80 p-6 flex flex-col items-center text-center shadow-2xl">
+        <div class="absolute -top-16 -right-16 w-48 h-48 bg-brand-blue/20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-16 -left-16 w-48 h-48 bg-brand-cyan/15 rounded-full blur-3xl"></div>
+
+        <!-- Réplica Vectorial Exacta del Logo Oficial BLUE CALVES FIT -->
+        <div class="relative w-44 h-44 mb-3 drop-shadow-[0_0_22px_rgba(56,189,248,0.35)]">
+          <svg viewBox="0 0 300 300" class="w-full h-full">
+            <defs>
+              <linearGradient id="bluecalvesLinear" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8"/>
+                <stop offset="50%" stop-color="#0284c7"/>
+                <stop offset="100%" stop-color="#092754"/>
+              </linearGradient>
+              <linearGradient id="silverGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="60%" stop-color="#e2e8f0"/>
+                <stop offset="100%" stop-color="#94a3b8"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Círculo Exterior Biselado Oficial -->
+            <circle cx="150" cy="150" r="130" stroke="url(#bluecalvesLinear)" stroke-width="13" fill="none" opacity="0.9" />
+            <circle cx="150" cy="150" r="115" stroke="#0f172a" stroke-width="4" fill="none"/>
+
+            <!-- Silueta Muscular/Flecha (Gastrocnemio Azul Oscuro) -->
+            <path d="M150 42 L215 130 L188 130 C195 160 185 200 150 225 C115 200 105 160 112 130 L85 130 Z" fill="#092754" />
+            
+            <!-- Aletas estilizadas celestes -->
+            <path d="M150 54 L202 125 L182 125 C186 160 170 190 150 215 C130 190 114 160 118 125 L98 125 Z" fill="url(#bluecalvesLinear)" />
+
+            <!-- Cuerpo Central Plata/Blanco Neón -->
+            <path d="M150 68 C160 100 180 130 174 165 C168 190 158 200 150 215 C142 200 132 190 126 165 C120 130 140 100 150 68 Z" fill="url(#silverGloss)" />
+
+            <!-- Corte muscular medio interno -->
+            <path d="M150 90 C156 120 162 145 150 185 C138 145 144 120 150 90 Z" fill="#092754" />
+            <path d="M150 145 L158 195 L150 212 L142 195 Z" fill="#38bdf8" />
+          </svg>
+        </div>
+
+        <h1 class="font-title tracking-wider text-4xl font-bold uppercase text-white leading-tight">BLUE CALVES</h1>
+        <div class="flex items-center gap-3 w-48 justify-center my-1">
+          <div class="h-[2px] flex-1 bg-gradient-to-r from-transparent to-brand-cyan"></div>
+          <span class="font-title tracking-widest text-2xl text-brand-cyan font-bold leading-none">FIT</span>
+          <div class="h-[2px] flex-1 bg-gradient-to-l from-transparent to-brand-cyan"></div>
+        </div>
+        <p class="text-xs text-slate-400 font-medium max-w-xs mt-1">Ecosistema integral de alto rendimiento: progresión de cargas, cálculo de macros y debate de nivel élite.</p>
+
+        <!-- Accesos rápidos principales -->
+        <div class="grid grid-cols-2 gap-3 w-full mt-6">
+          <button onclick="navigateTo('overload')" class="bg-gradient-to-r from-brand-blue to-blue-700 py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider text-white shadow-lg shadow-brand-blue/30 active:scale-95 transition flex items-center justify-center gap-2">
+            <span>⚡ Cargas Gym</span>
+          </button>
+          <button onclick="navigateTo('arena')" class="bg-gradient-to-r from-rose-700 to-red-600 py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider text-white shadow-lg shadow-red-700/30 active:scale-95 transition flex items-center justify-center gap-2">
+            <span>🔥 Arena VIP ($1)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Resumen de Estado del Usuario -->
+      <div class="bg-brand-card/90 border border-brand-border rounded-2xl p-4">
+        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center justify-between">
+          <span>Resumen de Atleta</span>
+          <span class="text-brand-cyan text-[10px]">Activo Hoy</span>
+        </h3>
+        <div class="grid grid-cols-3 gap-2">
+          <div class="bg-brand-darker border border-brand-border/70 p-3 rounded-xl text-center">
+            <span class="block text-slate-400 text-[10px] font-bold uppercase">Series Hoy</span>
+            <span id="home-sets-count" class="font-title text-2xl text-brand-cyan">0</span>
+          </div>
+          <div class="bg-brand-darker border border-brand-border/70 p-3 rounded-xl text-center">
+            <span class="block text-slate-400 text-[10px] font-bold uppercase">Objetivo</span>
+            <span class="font-title text-2xl text-white">BULK</span>
+          </div>
+          <div class="bg-brand-darker border border-brand-border/70 p-3 rounded-xl text-center">
+            <span class="block text-slate-400 text-[10px] font-bold uppercase">Arena VIP</span>
+            <span class="font-title text-2xl text-amber-400">$1/2 Sem</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banner de la Arena de Debates -->
+      <div onclick="navigateTo('arena')" class="cursor-pointer relative overflow-hidden rounded-2xl border border-red-500/50 bg-gradient-to-r from-red-950/40 via-brand-card to-brand-card p-4 flex items-center justify-between active:scale-[0.98] transition">
+        <div class="space-y-1">
+          <span class="inline-block px-2 py-0.5 text-[9px] font-black uppercase rounded bg-red-600 text-white tracking-widest">
+            Comunidad Cerrada
+          </span>
+          <h4 class="font-title text-2xl text-white leading-tight">ARENA DE DEBATES GYM</h4>
+          <p class="text-xs text-slate-300">Evidencia vs mito. Acceso de 2 semanas por solo <strong class="text-emerald-400">$1 USD</strong>.</p>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-red-600/20 border border-red-500 flex items-center justify-center text-red-400 font-bold text-lg">
+          ➔
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========== TAB 2: SOBRECARGA PROGRESIVA ========== -->
+    <section id="tab-overload" class="hidden space-y-4">
+      <div>
+        <h2 class="font-title tracking-wider text-3xl text-white">SOBRECARGA PROGRESIVA</h2>
+        <p class="text-xs text-slate-400">Si no apuntas lo que levantas, solo estás adivinando. Supera tu marca.</p>
+      </div>
+
+      <!-- Formulario para Registrar Levantamiento -->
+      <form id="overload-form" onsubmit="addLift(event)" class="bg-brand-card border border-brand-border p-4 rounded-2xl space-y-3 shadow-lg">
+        <div>
+          <label class="block text-[11px] font-bold uppercase text-slate-300 mb-1">Ejercicio</label>
+          <input type="text" id="exercise-name" placeholder="Ej: Press de Banca Plano, Sentadilla Libre" required
+            class="w-full bg-brand-darker border border-brand-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-cyan placeholder-slate-600">
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-300 mb-1">Peso (kg/lb)</label>
+            <input type="number" step="0.5" id="exercise-weight" placeholder="100" required
+              class="w-full bg-brand-darker border border-brand-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-cyan placeholder-slate-600">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-300 mb-1">Reps</label>
+            <input type="number" id="exercise-reps" placeholder="8" required
+              class="w-full bg-brand-darker border border-brand-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-cyan placeholder-slate-600">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-300 mb-1">RPE / RIR</label>
+            <input type="number" step="0.5" id="exercise-rpe" placeholder="9.0" min="5" max="10"
+              class="w-full bg-brand-darker border border-brand-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-cyan placeholder-slate-600">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-blue to-brand-cyan text-brand-void font-extrabold text-xs uppercase tracking-wider hover:brightness-110 active:scale-95 transition shadow-md shadow-brand-blue/30">
+          + Guardar Serie en Historial
+        </button>
+      </form>
+
+      <!-- Historial de Levantamientos -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-bold text-slate-400 uppercase px-1">
+          <span>Historial Guardado (Local)</span>
+          <button onclick="clearHistory()" class="text-rose-400 text-[11px] lowercase hover:underline">vaciar registro</button>
+        </div>
+        <div id="lifts-container" class="space-y-2">
+          <!-- Creado dinámicamente con JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TAB 3: CALCULADORA DE MACROS & CALORÍAS ========== -->
+    <section id="tab-macros" class="hidden space-y-4">
+      <div>
+        <h2 class="font-title tracking-wider text-3xl text-white">CALCULADORA DE MACROS</h2>
+        <p class="text-xs text-slate-400">Ajuste metabólico preciso mediante Mifflin-St Jeor para volumen o definición.</p>
+      </div>
+
+      <div class="bg-brand-card border border-brand-border p-4 rounded-2xl space-y-3.5 shadow-lg">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-300 mb-1">Objetivo Físico</label>
+            <select id="macro-goal" class="w-full bg-brand-darker border border-brand-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-cyan">
+              <option value="bulk_clean">Volumen Magro (+300 kcal)</option>
+              <option value="bulk_hard" selected>Volumen Fuerte (+500 kcal)</option>
+              <option value="cut">Definición (-400 kcal)</option>
+              <option value="maintenance">Mantenimiento (0 kcal)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-300 mb-1">Días de Gym / Semana</label>
+            <select id="macro-activity" class="w-full bg-brand-darker border border-brand-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-cyan">
+              <option value="1.375">3 a 4 días</option>
+              <option value="1.55" selected>5 a 6 días (Intenso)</option>
+              <option value="1.725">Doble sesión / Avanzado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-300 mb-1">Peso (kg)</label>
+            <input type="number" id="macro-weight" value="75" class="w-full bg-brand-darker border border-brand-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-cyan">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-300 mb-1">Altura (cm)</label>
+            <input type="number" id="macro-height" value="175" class="w-full bg-brand-darker border border-brand-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-cyan">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-300 mb-1">Edad</label>
+            <input type="number" id="macro-age" value="24" class="w-full bg-brand-darker border border-brand-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-cyan">
+          </div>
+        </div>
+
+        <button onclick="calculateMacros()" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-blue to-cyan-500 font-extrabold text-xs uppercase tracking-wider text-white shadow-md shadow-brand-blue/30 active:scale-95 transition">
+          Calcular Prescripción Nutricional
+        </button>
+      </div>
+
+      <!-- Desglose de Resultados -->
+      <div class="bg-gradient-to-b from-brand-cardLight to-brand-card border border-brand-cyan/30 rounded-2xl p-5 space-y-4 shadow-xl">
+        <div class="text-center">
+          <span class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Aporte Calórico Sugerido</span>
+          <h3 id="res-cals" class="font-title text-5xl text-brand-cyan font-bold glow-text leading-none mt-1">-- KCAL</h3>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 text-center pt-2 border-t border-brand-border/70">
+          <div class="p-2.5 bg-brand-darker/80 rounded-xl border border-brand-border">
+            <span class="block text-[10px] font-bold text-slate-400 uppercase">Proteína</span>
+            <span id="res-prot" class="font-title text-2xl text-white font-bold">-- g</span>
+            <span class="block text-[9px] text-brand-cyan font-medium">2.0 g / kg</span>
+          </div>
+          <div class="p-2.5 bg-brand-darker/80 rounded-xl border border-brand-border">
+            <span class="block text-[10px] font-bold text-slate-400 uppercase">Carbos</span>
+            <span id="res-carb" class="font-title text-2xl text-brand-cyan font-bold">-- g</span>
+            <span class="block text-[9px] text-slate-400 font-medium">Energía</span>
+          </div>
+          <div class="p-2.5 bg-brand-darker/80 rounded-xl border border-brand-border">
+            <span class="block text-[10px] font-bold text-slate-400 uppercase">Grasas</span>
+            <span id="res-fats" class="font-title text-2xl text-yellow-400 font-bold">-- g</span>
+            <span class="block text-[9px] text-slate-400 font-medium">Hormonal</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TAB 4: ARENA DE DEBATES DEL GYM ($1 / 2 SEMANAS) ========== -->
+    <section id="tab-arena" class="hidden space-y-4">
+      <div class="text-center py-1">
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-600/20 text-red-400 border border-red-500/40">
+          SALÓN PRIVADO DE DISCUSIÓN
+        </span>
+        <h2 class="font-title tracking-wider text-3xl text-white mt-1">ARENA DE DEBATES DEL GYM</h2>
+        <p class="text-xs text-slate-400 max-w-xs mx-auto">
+          Biomecánica real, evidencia científica y debate sin censura entre atletas serios.
+        </p>
+      </div>
+
+      <!-- Tarjeta Principal de Monetización ($1 USD) -->
+      <div class="bg-gradient-to-b from-brand-card to-brand-darker border-2 border-brand-blue/60 rounded-3xl p-5 shadow-2xl glow-brand space-y-4">
+        <div class="flex items-center justify-between border-b border-brand-border/80 pb-3">
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Acceso de Combate</span>
+            <h4 class="font-title text-2xl text-white leading-none mt-0.5">MEMBRESÍA 2 SEMANAS</h4>
+          </div>
+          <div class="text-right">
+            <span class="font-title text-4xl font-bold text-emerald-400 leading-none">$1</span>
+            <span class="block text-[9px] text-slate-400 font-bold uppercase">USD Único</span>
+          </div>
+        </div>
+
+        <ul class="text-xs space-y-2 text-slate-300">
+          <li class="flex items-center gap-2">
+            <span class="text-brand-cyan">✔</span> Acceso total a salas de debate de volumen, esteroides, y técnica.
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-brand-cyan">✔</span> Respuestas de preparadores físicos y atletas avanzados.
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-brand-cyan">✔</span> Activación inmediata por Pago Móvil o Binance Pay.
+          </li>
+        </ul>
+
+        <!-- Instrucciones y Pasarela Visual de Pago -->
+        <div class="bg-brand-void/90 border border-brand-border rounded-2xl p-3.5 space-y-2.5 text-xs">
+          <div class="flex items-center justify-between border-b border-brand-border/60 pb-2">
+            <span class="font-bold text-white text-[11px] uppercase">Datos Oficiales de Pago:</span>
+            <span class="text-brand-cyan text-[10px]">Tasa Oficial / Paralelo</span>
+          </div>
+
+          <!-- Pago Móvil Banesco / BDV -->
+          <div class="space-y-1.5">
+            <div class="bg-brand-card p-2 rounded-xl border border-brand-border/60 flex items-center justify-between">
+              <div>
+                <span class="block text-[9px] font-bold text-blue-400 uppercase">🇻🇪 Pago Móvil Banesco / BDV</span>
+                <span class="font-mono text-white text-xs select-all">0102 • 0412-0000000 • V-26.123.456</span>
+              </div>
+              <button onclick="copyToClipboard('04120000000')" class="text-[10px] bg-brand-border hover:bg-brand-blue px-2 py-1 rounded text-white font-bold transition">
+                Copiar
+              </button>
+            </div>
+
+            <!-- Binance Pay -->
+            <div class="bg-brand-card p-2 rounded-xl border border-brand-border/60 flex items-center justify-between">
+              <div>
+                <span class="block text-[9px] font-bold text-yellow-400 uppercase">🟡 Binance P2P / Pay (USDT)</span>
+                <span class="font-mono text-white text-xs select-all">Binance ID: 418932014</span>
+              </div>
+              <button onclick="copyToClipboard('418932014')" class="text-[10px] bg-brand-border hover:bg-brand-blue px-2 py-1 rounded text-white font-bold transition">
+                Copiar
+              </button>
+            </div>
+          </div>
+
+          <p class="text-[10px] text-slate-400 text-center italic">
+            *Envía el capture de la transferencia por WhatsApp para recibir tu enlace de acceso único.
+          </p>
+        </div>
+
+        <!-- Botón de Validación WhatsApp Directo -->
+        <a href="https://wa.me/584120000000?text=Hola%20BLUE%20CALVES%20FIT!%20Acabo%20de%20transferir%20$1%20USD%20para%20activar%20mi%20Pase%20de%202%20Semanas%20a%20la%20Arena%20de%20Debates.%20Adjunto%20el%20capture%20del%20pago."
+          target="_blank"
+          class="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-center block uppercase tracking-wider text-xs shadow-lg shadow-emerald-700/40 active:scale-95 transition">
+          🚀 Validar Pago ($1) en WhatsApp
+        </a>
+      </div>
+
+      <!-- Debates Activos (Vista previa bloqueada) -->
+      <div class="space-y-2 pt-2">
+        <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Hilos más encendidos de la semana</h4>
+
+        <div class="bg-brand-card/70 border border-brand-border p-3.5 rounded-xl flex items-center justify-between">
+          <div class="space-y-1 pr-2">
+            <span class="text-[9px] text-red-400 font-bold uppercase">En Curso • 126 Comentarios</span>
+            <p class="text-xs font-bold text-white leading-snug">¿El fallo muscular absoluto en prensa de piernas inhibe la síntesis proteica si no hay descanso de 72h?</p>
+          </div>
+          <span class="text-base text-brand-cyan">🔒</span>
+        </div>
+
+        <div class="bg-brand-card/70 border border-brand-border p-3.5 rounded-xl flex items-center justify-between">
+          <div class="space-y-1 pr-2">
+            <span class="text-[9px] text-amber-400 font-bold uppercase">Nutrición • 94 Comentarios</span>
+            <p class="text-xs font-bold text-white leading-snug">¿Volumen sucio (+1000 kcal) vs Lean Bulk (+300 kcal): Genética o desperdicio de tiempo?</p>
+          </div>
+          <span class="text-base text-brand-cyan">🔒</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= BARRA DE NAVEGACIÓN INFERIOR (PWA FOOTER TABS) ================= -->
+  <nav class="fixed bottom-0 left-0 right-0 glass-nav border-t border-brand-border/80 px-4 py-2 z-40">
+    <div class="max-w-md mx-auto grid grid-cols-4 gap-1 text-center">
+
+      <button onclick="navigateTo('home')" id="nav-home" class="flex flex-col items-center py-1 text-brand-cyan transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span class="text-[9px] font-bold uppercase tracking-wider">Inicio</span>
+      </button>
+
+      <button onclick="navigateTo('overload')" id="nav-overload" class="flex flex-col items-center py-1 text-slate-400 hover:text-white transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span class="text-[9px] font-bold uppercase tracking-wider">Cargas</span>
+      </button>
+
+      <button onclick="navigateTo('macros')" id="nav-macros" class="flex flex-col items-center py-1 text-slate-400 hover:text-white transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <span class="text-[9px] font-bold uppercase tracking-wider">Macros</span>
+      </button>
+
+      <button onclick="navigateTo('arena')" id="nav-arena" class="flex flex-col items-center py-1 text-slate-400 hover:text-white transition relative">
+        <span class="absolute top-0 right-4 w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
+        <span class="text-[9px] font-bold uppercase tracking-wider">Arena $1</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ================= JAVASCRIPT & SERVICE WORKER ================= -->
+  <script>
+    // 1. Registro de Service Worker embebido mediante Blob para soporte PWA Offline
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        const swScript = `
+          const CACHE_NAME = 'bluecalves-cache-v1';
+          self.addEventListener('install', (e) => self.skipWaiting());
+          self.addEventListener('activate', (e) => clients.claim());
+          self.addEventListener('fetch', (e) => {
+            e.respondWith(
+              fetch(e.request).catch(() => caches.match(e.request))
+            );
+          });
+        `;
+        const blob = new Blob([swScript], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+      });
+    }
+
+    // Instalación PWA (BeforeInstallPrompt)
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const installBtn = document.getElementById('install-btn');
+      if (installBtn) installBtn.classList.remove('hidden');
+    });
+
+    function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          document.getElementById('install-btn').classList.add('hidden');
+        });
+      }
+    }
+
+    // 2. Navegación entre Vistas (Single Page Experience)
+    function navigateTo(tabId) {
+      const tabs = ['home', 'overload', 'macros', 'arena'];
+      tabs.forEach(tab => {
+        const screen = document.getElementById(`tab-${tab}`);
+        const navBtn = document.getElementById(`nav-${tab}`);
+        
+        if (tab === tabId) {
+          screen.classList.remove('hidden');
+          navBtn.classList.remove('text-slate-400');
+          navBtn.classList.add('text-brand-cyan');
+        } else {
+          screen.classList.add('hidden');
+          navBtn.classList.add('text-slate-400');
+          navBtn.classList.remove('text-brand-cyan');
+        }
+      });
+      window.scrollTo(0, 0);
+    }
+
+    // 3. Sistema de Sobrecarga Progresiva (Persistencia LocalStorage)
+    let lifts = JSON.parse(localStorage.getItem('bluecalves_lifts') || '[]');
+
+    function updateDashboardCount() {
+      const el = document.getElementById('home-sets-count');
+      if (el) el.innerText = lifts.length;
+    }
+
+    function renderLifts() {
+      const container = document.getElementById('lifts-container');
+      updateDashboardCount();
+
+      if (lifts.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-500 text-xs border border-dashed border-brand-border rounded-xl">
+            No tienes registros todavía. Guarda tu primer set arriba.
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = lifts.map((item, index) => `
+        <div class="bg-brand-card border border-brand-border/80 p-3.5 rounded-2xl flex items-center justify-between shadow-md">
+          <div>
+            <h4 class="font-bold text-sm text-white capitalize">${item.exercise}</h4>
+            <div class="flex items-center gap-2 mt-0.5 text-xs text-slate-400">
+              <span class="text-brand-cyan font-extrabold">${item.weight} kg</span>
+              <span>×</span>
+              <span class="text-white font-bold">${item.reps} reps</span>
+              ${item.rpe ? `<span class="text-[10px] bg-brand-darker px-1.5 py-0.5 rounded border border-brand-border">RPE ${item.rpe}</span>` : ''}
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] text-slate-500 font-semibold">${item.date}</span>
+            <button onclick="deleteLift(${index})" class="text-slate-500 hover:text-rose-400 transition p-1">
+              ✕
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addLift(e) {
+      e.preventDefault();
+      const exercise = document.getElementById('exercise-name').value.trim();
+      const weight = document.getElementById('exercise-weight').value;
+      const reps = document.getElementById('exercise-reps').value;
+      const rpe = document.getElementById('exercise-rpe').value;
+
+      if (!exercise || !weight || !reps) return;
+
+      const newLift = {
+        exercise,
+        weight,
+        reps,
+        rpe,
+        date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })
+      };
+
+      lifts.unshift(newLift);
+      localStorage.setItem('bluecalves_lifts', JSON.stringify(lifts));
+      renderLifts();
+      document.getElementById('overload-form').reset();
+    }
+
+    function deleteLift(index) {
+      lifts.splice(index, 1);
+      localStorage.setItem('bluecalves_lifts', JSON.stringify(lifts));
+      renderLifts();
+    }
+
+    function clearHistory() {
+      if (confirm('¿Deseas reiniciar tu historial de sobrecarga?')) {
+        lifts = [];
+        localStorage.removeItem('bluecalves_lifts');
+        renderLifts();
+      }
+    }
+
+    // 4. Calculadora de Macros (Mifflin-St Jeor + Superávit/Déficit)
+    function calculateMacros() {
+      const weight = parseFloat(document.getElementById('macro-weight').value);
+      const height = parseFloat(document.getElementById('macro-height').value);
+      const age = parseFloat(document.getElementById('macro-age').value);
+      const activity = parseFloat(document.getElementById('macro-activity').value);
+      const goal = document.getElementById('macro-goal').value;
+
+      if (isNaN(weight) || isNaN(height) || isNaN(age)) return;
+
+      // TMB Fórmula Mifflin-St Jeor (varón deportivo)
+      const tmb = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+      const tdee = tmb * activity;
+
+      let surplus = 0;
+      if (goal === 'bulk_clean') surplus = 300;
+      if (goal === 'bulk_hard') surplus = 500;
+      if (goal === 'cut') surplus = -400;
+
+      const totalCalories = Math.round(tdee + surplus);
+
+      // Desglose de macronutrientes: 2.0g/kg Proteína, 0.9g/kg Grasa, resto Carbohidratos
+      const proteinGrams = Math.round(weight * 2.0);
+      const fatsGrams = Math.round(weight * 0.9);
+      const calFromProtAndFat = (proteinGrams * 4) + (fatsGrams * 9);
+      const carbsGrams = Math.max(0, Math.round((totalCalories - calFromProtAndFat) / 4));
+
+      document.getElementById('res-cals').innerText = `${totalCalories} KCAL`;
+      document.getElementById('res-prot').innerText = `${proteinGrams}g`;
+      document.getElementById('res-carb').innerText = `${carbsGrams}g`;
+      document.getElementById('res-fats').innerText = `${fatsGrams}g`;
+    }
+
+    // 5. Utilidad de Copiado Rápido al Portapapeles
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copiado al portapapeles: ' + text);
+      }).catch(() => {
+        prompt('Copia manualmente:', text);
+      });
+    }
+
+    // Inicializaciones al arrancar
+    document.addEventListener('DOMContentLoaded', () => {
+      renderLifts();
+      calculateMacros();
+    });
+  </script>
+</body>
+</html>
